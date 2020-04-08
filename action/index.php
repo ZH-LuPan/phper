@@ -54,22 +54,22 @@ if($action == 'export'){
                                array(
                                    'field' => '',
                                    'name'  => '第2题,3分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第1题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第2题,3分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第1题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                )
                            )
                        ),
@@ -82,17 +82,17 @@ if($action == 'export'){
                                array(
                                    'field' => '',
                                    'name'  => '第1题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第2题,3分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第3题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                )
                            )
                        ),
@@ -105,12 +105,12 @@ if($action == 'export'){
                                array(
                                    'field' => '',
                                    'name'  => '第7题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第8题,3分',
-                                   'width' => '9'
+                                   'width' => '12'
                                )
                            )
                        ),

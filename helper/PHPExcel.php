@@ -50,7 +50,7 @@ class PHPExcel
                     }
                 }
                 //设置表头
-                $mergeRow = '';
+                $mergeRow = 0;
                 $start = count($value['titleArr']) + 1;
                 if (is_array($value['headerArr'])) foreach ($value['headerArr'] as $k => $v) {
                     if($v['mergeCol']) $Sheet->mergeCells($arrange[$k] . $start.":".$arrange[$k] . ($start+$v['mergeCol']-1));
@@ -58,8 +58,12 @@ class PHPExcel
                     $Sheet->getStyle($arrange[$k] . $start)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
                     $Sheet->getStyle($arrange[$k] . $start)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
                     $Sheet->getStyle($arrange[$k] . $start)->getFont()->setBold(true);  //加粗
-                    $v['width'] && $Sheet->getColumnDimension($arrange[$k])->setWidth($v['width']);
+                    $Sheet->getColumnDimension($arrange[$k])->setWidth($v['width']);
                     $Sheet->setCellValue($arrange[$k] . $start, $v['name']);
+                    if($v['sonRow']) foreach ($v['sonRow'] as $item => $son){
+                        $Sheet->getColumnDimension($arrange[$k+$item])->setWidth($son['width']);
+                        $Sheet->setCellValue($arrange[$k+$item] . ($start+1), $v['name']);
+                    }
                     if($v['mergeRow'])  $mergeRow += $v['mergeRow'];
                 }
                 $start += 1;
