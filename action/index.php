@@ -10,7 +10,6 @@ require_once '../config.php';
 $action = $_GET['action'];
 
 if($action == 'test'){
-//    print_r(PDO::getAvailableDrivers());
     phpinfo();
 }
 
@@ -117,6 +116,8 @@ if($action == 'export'){
                    )
             )
     );
+
+
     include_once '../helper/PHPExcel.php';
     $phpExcel = new \Helpers\PHPExcel();
     $phpExcel->exportExcel('123',$data);
