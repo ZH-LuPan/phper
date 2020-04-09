@@ -1,4 +1,6 @@
 <?php
+
+use db\RedisDb;
 /**
  * Created by PhpStorm.
  * User: LP
@@ -122,4 +124,12 @@ if($action == 'export'){
     $phpExcel = new \Helpers\PHPExcel();
     $phpExcel->exportExcel('123',$data);
 
+}
+
+if($action == 'redis'){
+
+    require_once '../db/RedisDb.php';
+    $config = array('host'=>'127.0.0.1');
+    $redis = RedisDb::getInstance($config);
+    print_r($redis);
 }

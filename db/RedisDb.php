@@ -16,28 +16,33 @@ class RedisDb
     protected $auth;
     private static $_instance=array();
     private $k;
+    protected $expireTime;
+    protected $host;
+    protected $port;
     protected $attr = array(
         'timeout' => 30,
         'db_id'   => 0
     );
-    protected $expireTime;
-    protected $host;
-    protected $port;
 
 
     private function __construct($config,$attr=array())
     {
-        $this->attr = array_merge($this->attr,$attr);
-        $this->redis = new \Redis();
-        $this->port = $config['port'] ? $config['port'] : 6379;
-        $this->host = $config['host'];
-        $this->redis->connect($this->host,$this->port,$this->attr['timeout']);
-        if($config['auth'])
-        {
-            $this->auth($config['auth']);
-            $this->auth = $config['auth'];
+        try{
+            $this->attr = array_merge($this->attr,$attr);
+            $this->redis = new \Redis();
+            $this->port = $config['port'] ? $config['port'] : 6379;
+            $this->host = $config['host'];
+            $this->redis->connect($this->host,$this->port,$this->attr['timeout']);
+            if($config['auth'])
+            {
+                $this->auth($config['auth']);
+                $this->auth = $config['auth'];
+            }
+            $this->expireTime = time() + $this->attr['timeout'];
+        }catch (\Exception $e){
+            print_r($e->getMessage());
         }
-        $this->expireTime = time() + $this->attr['timeout'];
+
     }
 
     public static function getInstance($config, $attr = [])
@@ -49,10 +54,10 @@ class RedisDb
         }
         $attr['db_id'] = $attr['db_id'] ?: 0;
         $k = md5(implode('',$config) . $attr['db_id']);
-        if(! self::$_instance[$k] instanceof self){
-            self::$_instance[$k] = new self($config, $attr);
-            self::$_instance[$k]->k = $k;
-            self::$_instance[$k]->db_id = $attr['db_id'];
+        if(! static::$_instance[$k] instanceof self){
+            static::$_instance[$k] = new self($config, $attr);
+            static::$_instance[$k]->k = $k;
+            static::$_instance[$k]->db_id = $attr['db_id'];
 
             if($attr['db_id'] != 0){
                 self::$_instance[$k]->select($attr['db_id']);
