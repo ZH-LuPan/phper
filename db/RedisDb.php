@@ -19,46 +19,50 @@ class RedisDb
     protected $expireTime;
     protected $host;
     protected $port;
-    protected $attr = array(
+    protected static $attr = array(
         'timeout' => 30,
         'db_id'   => 0
+    );
+    private static $config = array(
+        'host'  => '127.0.0.1',
+        'port'  => 6379,
+        'auth'  => ''
     );
 
 
     private function __construct($config,$attr=array())
     {
         try{
-            $this->attr = array_merge($this->attr,$attr);
+            self::$attr = array_merge(self::$attr,$attr);
             $this->redis = new \Redis();
             $this->port = $config['port'] ? $config['port'] : 6379;
             $this->host = $config['host'];
-            $this->redis->connect($this->host,$this->port,$this->attr['timeout']);
-            if($config['auth'])
-            {
+            $this->redis->connect($this->host,$this->port,self::$attr['timeout']);
+            if($config['auth']){
                 $this->auth($config['auth']);
                 $this->auth = $config['auth'];
             }
-            $this->expireTime = time() + $this->attr['timeout'];
+            $this->expireTime = time() + self::$attr['timeout'];
         }catch (\Exception $e){
-            print_r($e->getMessage());
+            die('连接redis失败'.$e->getMessage());
         }
 
     }
 
-    public static function getInstance($config, $attr = [])
+    public static function getInstance($config = [],$attr = [])
     {
         if(!is_array($attr)){
             $dbId = $attr;
-            $attr = [];
             $attr['db_id'] = $dbId;
         }
+        if(empty($attr)) $attr = self::$attr;
         $attr['db_id'] = $attr['db_id'] ?: 0;
+        $config = $config ? $config : self::$config;
         $k = md5(implode('',$config) . $attr['db_id']);
-        if(! static::$_instance[$k] instanceof self){
+        if(! @static::$_instance[$k] instanceof self){
             static::$_instance[$k] = new self($config, $attr);
             static::$_instance[$k]->k = $k;
             static::$_instance[$k]->db_id = $attr['db_id'];
-
             if($attr['db_id'] != 0){
                 self::$_instance[$k]->select($attr['db_id']);
             }
@@ -67,8 +71,6 @@ class RedisDb
             static::$_instance[$k] = new self($config, $attr);
             static::$_instance[$k]->k = $k;
             static::$_instance[$k]->dbId = $attr['db_id'];
-
-            //如果不是0号库，选择一下数据库。
             if($attr['db_id'] != 0) {
                 static::$_instance[$k]->select($attr['db_id']);
             }
@@ -295,9 +297,9 @@ class RedisDb
         return $this->redis->set($key,$value);
     }
 
-    public function get($key,$value)
+    public function get($key)
     {
-        return $this->redis->get($key,$value);
+        return $this->redis->get($key);
     }
 
     public function setex($key,$expire,$value)

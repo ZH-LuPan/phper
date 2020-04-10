@@ -1,6 +1,8 @@
 <?php
 
 use db\RedisDb;
+
+require_once '../db/RedisDb.php';
 /**
  * Created by PhpStorm.
  * User: LP
@@ -127,9 +129,24 @@ if($action == 'export'){
 }
 
 if($action == 'redis'){
+    $redis = RedisDb::getInstance();
+    $redis->set('test',231);
+    $redis->expire('test',10);
+    print_r($redis->get('test'));
+}
 
-    require_once '../db/RedisDb.php';
-    $config = array('host'=>'127.0.0.1');
-    $redis = RedisDb::getInstance($config);
-    print_r($redis);
+if($action == 'miaosha'){  //秒杀demo
+
+    //1.商品入列
+    $redis = RedisDb::getInstance();
+    $goodNum = 100;
+    for($i = 0 ; $i < 100 ; $i++){
+
+    }
+
+
+    //用户入列
+
+
+
 }
