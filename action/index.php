@@ -1,4 +1,8 @@
 <?php
+
+use db\RedisDb;
+
+require_once '../db/RedisDb.php';
 /**
  * Created by PhpStorm.
  * User: LP
@@ -10,7 +14,6 @@ require_once '../config.php';
 $action = $_GET['action'];
 
 if($action == 'test'){
-//    print_r(PDO::getAvailableDrivers());
     phpinfo();
 }
 
@@ -54,22 +57,22 @@ if($action == 'export'){
                                array(
                                    'field' => '',
                                    'name'  => '第2题,3分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第1题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第2题,3分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第1题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                )
                            )
                        ),
@@ -82,17 +85,17 @@ if($action == 'export'){
                                array(
                                    'field' => '',
                                    'name'  => '第1题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第2题,3分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第3题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                )
                            )
                        ),
@@ -105,20 +108,45 @@ if($action == 'export'){
                                array(
                                    'field' => '',
                                    'name'  => '第7题,2分',
-                                   'width' => '9'
+                                   'width' => '12'
                                ),
                                array(
                                    'field' => '',
                                    'name'  => '第8题,3分',
-                                   'width' => '9'
+                                   'width' => '12'
                                )
                            )
                        ),
                    )
             )
     );
+
+
     include_once '../helper/PHPExcel.php';
     $phpExcel = new \Helpers\PHPExcel();
     $phpExcel->exportExcel('123',$data);
+
+}
+
+if($action == 'redis'){
+    $redis = RedisDb::getInstance();
+    $redis->set('test',231);
+    $redis->expire('test',10);
+    print_r($redis->get('test'));
+}
+
+if($action == 'miaosha'){  //秒杀demo
+
+    //1.商品入列
+    $redis = RedisDb::getInstance();
+    $goodNum = 100;
+    for($i = 0 ; $i < 100 ; $i++){
+
+    }
+
+
+    //用户入列
+
+
 
 }
