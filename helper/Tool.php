@@ -53,4 +53,80 @@ class Tool
         if($asc>=-11055&&$asc<=-10247) return 'Z';
         return null;
     }
+
+
+    /**
+     * 二维数组根据多个字段进行排序
+     *
+     * sortArrByManyField($array1,'id',SORT_ASC,'name',SORT_ASC,'age',SORT_DESC);
+     * @return mixed|null
+     */
+    function sortArrByManyField(){
+        $args = func_get_args();
+        if(empty($args)){
+            return null;
+        }
+        $arr = array_shift($args);
+        if(!is_array($arr)){
+            throw new Exception("第一个参数不为数组");
+        }
+        foreach($args as $key => $field){
+            if(is_string($field)){
+                $temp = array();
+                foreach($arr as $index=> $val){
+                    $temp[$index] = $val[$field];
+                }
+                $args[$key] = $temp;
+            }
+        }
+        $args[] = &$arr;//引用值
+        call_user_func_array('array_multisort',$args);
+        return array_pop($args);
+    }
+
+
+    /**
+     * 方法说明：对二维数组按照某个字段进行排序
+     * @param array $arr  二维数组
+     * @param string $str   字段名称
+     * @param string $sortType
+     * @return array   返回排序后的数组
+     * @create by lp
+     */
+    function arraySortByField($arr = array(),$str="",$sortType='SORT_ASC')
+    {
+        $sort = array(
+            'direction' => $sortType, //排序顺序标志 SORT_DESC 降序；SORT_ASC 升序
+            'field'     => $str,       //排序字段
+        );
+        $arrSort = array();
+        if(is_array($arr))foreach($arr AS $uniqid => $row){
+            if(is_array($row))foreach($row AS $key=>$value){
+                $arrSort[$key][$uniqid] = $value;
+            }
+        }
+        if($sort['direction'] && is_array($arrSort[$sort['field']])){
+            @array_multisort($arrSort[$sort['field']], constant($sort['direction']), $arr);
+        }
+        return $arr;
+    }
+
+
+    /**
+     * 二维对象转数组
+     *
+     * @param $array
+     * @return array
+     */
+    function object_array($array) {
+        if(is_object($array)) {
+            $array = (array)$array;
+        } if(is_array($array)) {
+            foreach($array as $key=>$value) {
+                $array[$key] = object_array($value);
+            }
+        }
+        return $array;
+    }
+
 }

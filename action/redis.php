@@ -11,18 +11,11 @@ require_once '../db/RedisDb.php';
  */
 require_once '../config.php';
 
+
 $action = $_GET['action'];
 
-if($action == 'test'){
-    phpinfo();
-}
 
-if($action == 'export'){
-
-
-}
-
-if($action == 'redis'){
+if($action && $action == 'redis'){
     $redis = RedisDb::getInstance();
     $redis->set('test',231);
     $redis->expire('test',10);
